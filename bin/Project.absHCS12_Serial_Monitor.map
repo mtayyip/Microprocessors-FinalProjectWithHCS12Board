@@ -24,8 +24,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC03B and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x1100     52
-  _Copy    *toCopyDownBeg 0xC795
+  _Range   pZeroOut       0x1100     54
+  _Copy    *toCopyDownBeg 0xC764
 } _startupData;
 
 *********************************************************************************************
@@ -35,8 +35,8 @@ Section Name                    Size  Type     From       To       Segment
 .init                             59     R     0xC000     0xC03A   ROM_C000
 .startData                        10     R     0xC03B     0xC044   ROM_C000
 .rodata1                         100     R     0xC045     0xC0A8   ROM_C000
-.text                           1439     R     0xC0A9     0xC647   ROM_C000
-.copy                             14     R     0xC795     0xC7A2   ROM_C000
+.text                           1383     R     0xC0A9     0xC60F   ROM_C000
+.copy                             14     R     0xC764     0xC771   ROM_C000
 .stack                           256   R/W     0x1000     0x10FF   RAM
 .data                              8   R/W     0x1100     0x1107   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
@@ -565,13 +565,13 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_2ae                   2   N/I      0x2AE      0x2AF   .absSeg523
 .abs_section_2be                   2   N/I      0x2BE      0x2BF   .absSeg524
 .abs_section_ffee                  2     R     0xFFEE     0xFFEF   .absSeg525
-.bss                              44   R/W     0x1108     0x1133   RAM
-RUNTIME                          333     R     0xC648     0xC794   ROM_C000
+.bss                              46   R/W     0x1108     0x1135   RAM
+RUNTIME                          340     R     0xC610     0xC763   ROM_C000
 .vectSeg526_vect                   2     R     0xFFFE     0xFFFF   .vectSeg526
 
 Summary of section sizes per section type:
-READ_ONLY (R):         7A7 (dec:     1959)
-READ_WRITE (R/W):      134 (dec:      308)
+READ_ONLY (R):         776 (dec:     1910)
+READ_WRITE (R/W):      136 (dec:      310)
 NO_INIT (N/I):         24E (dec:      590)
 
 *********************************************************************************************
@@ -624,20 +624,20 @@ MODULE:                 -- mc9s12dp256.c.o --
      _RTICTL                                     3B       1       1       0   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
-     _TIOS                                       40       1       1       2   .abs_section_40
+     _TIOS                                       40       1       1       1   .abs_section_40
      _CFORC                                      41       1       1       0   .abs_section_41
      _OC7M                                       42       1       1       0   .abs_section_42
      _OC7D                                       43       1       1       0   .abs_section_43
      _TSCR1                                      46       1       1       1   .abs_section_46
      _TTOV                                       47       1       1       0   .abs_section_47
-     _TCTL1                                      48       1       1       2   .abs_section_48
+     _TCTL1                                      48       1       1       0   .abs_section_48
      _TCTL2                                      49       1       1       0   .abs_section_49
      _TCTL3                                      4A       1       1       0   .abs_section_4a
      _TCTL4                                      4B       1       1       1   .abs_section_4b
      _TIE                                        4C       1       1       1   .abs_section_4c
      _TSCR2                                      4D       1       1       1   .abs_section_4d
-     _TFLG1                                      4E       1       1       3   .abs_section_4e
-     _TFLG2                                      4F       1       1       5   .abs_section_4f
+     _TFLG1                                      4E       1       1       1   .abs_section_4e
+     _TFLG2                                      4F       1       1       3   .abs_section_4f
      _PACTL                                      60       1       1       0   .abs_section_60
      _PAFLG                                      61       1       1       0   .abs_section_61
      _MCCTL                                      66       1       1       0   .abs_section_66
@@ -945,7 +945,7 @@ MODULE:                 -- mc9s12dp256.c.o --
      _CAN3TXDSR7                                23B       1       1       0   .abs_section_23b
      _CAN3TXDLR                                 23C       1       1       0   .abs_section_23c
      _CAN3TXTBPR                                23D       1       1       0   .abs_section_23d
-     _PTT                                       240       1       1       0   .abs_section_240
+     _PTT                                       240       1       1       1   .abs_section_240
      _PTIT                                      241       1       1       0   .abs_section_241
      _DDRT                                      242       1       1       1   .abs_section_242
      _RDRT                                      243       1       1       0   .abs_section_243
@@ -1048,15 +1048,15 @@ MODULE:                 -- mc9s12dp256.c.o --
      _CAN4TXDLR                                 2BC       1       1       0   .abs_section_2bc
      _CAN4TXTBPR                                2BD       1       1       0   .abs_section_2bd
      _PORTAB                                      0       2       2      18   .abs_section_0
-     _DDRAB                                       2       2       2       1   .abs_section_2
+     _DDRAB                                       2       2       2       2   .abs_section_2
      _PARTID                                     1A       2       2       0   .abs_section_1a
-     _TCNT                                       44       2       2       1   .abs_section_44
+     _TCNT                                       44       2       2       0   .abs_section_44
      _TC0                                        50       2       2       0   .abs_section_50
      _TC1                                        52       2       2       0   .abs_section_52
      _TC2                                        54       2       2       0   .abs_section_54
      _TC3                                        56       2       2       0   .abs_section_56
      _TC4                                        58       2       2       0   .abs_section_58
-     _TC5                                        5A       2       2       1   .abs_section_5a
+     _TC5                                        5A       2       2       0   .abs_section_5a
      _TC6                                        5C       2       2       0   .abs_section_5c
      _TC7                                        5E       2       2       0   .abs_section_5e
      _PACN32                                     62       2       2       0   .abs_section_62
@@ -1114,27 +1114,27 @@ MODULE:                 -- mc9s12dp256.c.o --
      _CAN4TXTSR                                 2BE       2       2       0   .abs_section_2be
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C0A9     1A2     418       4   .text       
-     ringBuzzer                                C24B      38      56       5   .text       
-     calibration                               C283      F3     243       7   .text       
-     TC0_ISR                                   C376      13      19       1   .text       
-     map                                       C389      50      80       3   .text       
-     constrain                                 C3D9      2F      47       3   .text       
-     SNDelay                                   C408      23      35      18   .text       
-     scaling                                   C42B       7       7       1   .text       
-     redFilter                                 C432       7       7       1   .text       
-     greenFilter                               C439       7       7       1   .text       
-     blueFilter                                C440       7       7       1   .text       
-     clearFilter                               C447       7       7       1   .text       
-     max                                       C44E      7D     125       1   .text       
-     red_read                                  C4CB      23      35       3   .text       
-     green_read                                C4EE      23      35       2   .text       
-     blue_read                                 C511      23      35       3   .text       
-     clear_read                                C534      23      35       1   .text       
-     openLCD                                   C557      2F      47       1   .text       
-     put2lcd                                   C586      47      71       9   .text       
-     put                                       C5CD      1E      30      11   .text       
-     numLCD                                    C5EB      5D      93       2   .text       
+     main                                      C0A9     189     393       4   .text       
+     calibration                               C232      F3     243       7   .text       
+     TC0_ISR                                   C325      13      19       1   .text       
+     map                                       C338      50      80       3   .text       
+     constrain                                 C388      2F      47       3   .text       
+     SNDelay                                   C3B7      23      35      18   .text       
+     initialize                                C3DA       D      13       1   .text       
+     scaling                                   C3E7       7       7       1   .text       
+     redFilter                                 C3EE       7       7       1   .text       
+     greenFilter                               C3F5       7       7       1   .text       
+     blueFilter                                C3FC       7       7       1   .text       
+     clearFilter                               C403       7       7       1   .text       
+     max                                       C40A      89     137       1   .text       
+     red_read                                  C493      23      35       3   .text       
+     green_read                                C4B6      23      35       2   .text       
+     blue_read                                 C4D9      23      35       3   .text       
+     clear_read                                C4FC      23      35       1   .text       
+     openLCD                                   C51F      2F      47       1   .text       
+     put2lcd                                   C54E      47      71       9   .text       
+     put                                       C595      1E      30      13   .text       
+     numLCD                                    C5B3      5D      93       3   .text       
 - VARIABLES:
      STRING.R..1                               C045       3       3       1   .rodata1    
      STRING.G..2                               C048       3       3       1   .rodata1    
@@ -1153,17 +1153,18 @@ MODULE:                 -- main.c.o --
      g                                         1102       2       2       1   .data       
      b                                         1104       2       2       1   .data       
      space                                     1106       2       2       1   .data       
-     pulse                                     1108       4       4      20   .bss        
-     redR                                      110C       4       4      24   .bss        
-     blueB                                     1110       4       4      24   .bss        
-     greenG                                    1114       4       4      23   .bss        
-     clearC                                    1118       4       4       4   .bss        
-     whiteCalRed                               111C       4       4       6   .bss        
-     whiteCalGreen                             1120       4       4       6   .bss        
-     whiteCalBlue                              1124       4       4       6   .bss        
-     blackCalRed                               1128       4       4       6   .bss        
-     blackCalGreen                             112C       4       4       6   .bss        
-     blackCalBlue                              1130       4       4       6   .bss        
+     clr                                       1108       2       2       1   .bss        
+     pulse                                     110A       4       4      20   .bss        
+     redR                                      110E       4       4      24   .bss        
+     blueB                                     1112       4       4      24   .bss        
+     greenG                                    1116       4       4      23   .bss        
+     clearC                                    111A       4       4       4   .bss        
+     whiteCalRed                               111E       4       4       6   .bss        
+     whiteCalGreen                             1122       4       4       6   .bss        
+     whiteCalBlue                              1126       4       4       6   .bss        
+     blackCalRed                               112A       4       4       6   .bss        
+     blackCalGreen                             112E       4       4       6   .bss        
+     blackCalBlue                              1132       4       4       6   .bss        
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
@@ -1175,13 +1176,14 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                          1100       0       0       1               
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LINC                                     C648       5       5       1   RUNTIME     
-     _LMUL                                     C64D      27      39       1   RUNTIME     
-     _lDivMod                                  C674      BE     190       4   RUNTIME     
-     _LDIVU                                    C732       E      14       2   RUNTIME     
-     _NEG_P                                    C740       F      15       4   RUNTIME     
-     _LDIVS                                    C74F      35      53       1   RUNTIME     
-     _LMODU                                    C784      11      17       3   RUNTIME     
+     _LINC                                     C610       5       5       1   RUNTIME     
+     _LMUL                                     C615      27      39       1   RUNTIME     
+     _lDivMod                                  C63C      BE     190       4   RUNTIME     
+     _LDIVU                                    C6FA       E      14       2   RUNTIME     
+     _NEG_P                                    C708       F      15       4   RUNTIME     
+     _LDIVS                                    C717      35      53       1   RUNTIME     
+     _LMODU                                    C74C      11      17       3   RUNTIME     
+     _ILSEXT                                   C75D       7       7       1   RUNTIME     
 - VARIABLES:
 
 *********************************************************************************************
@@ -1189,22 +1191,22 @@ MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12dp256.c.o                            590      0      0
-  main.c.o                                    52   1439    102
+  main.c.o                                    54   1383    102
   Start12.c.o                                  0     59      0
-  rtshc12.c.o (ansisi.lib)                     0    333      0
+  rtshc12.c.o (ansisi.lib)                     0    340      0
   other                                      256     12     14
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  main ringBuzzer calibration TC0_ISR map constrain SNDelay scaling redFilter 
+  main calibration TC0_ISR map constrain SNDelay initialize scaling redFilter 
   greenFilter blueFilter clearFilter max red_read green_read blue_read 
   clear_read openLCD put2lcd put numLCD 
 SECTION: ".data"
   r g b space 
 SECTION: ".bss"
-  pulse redR blueB greenG clearC whiteCalRed whiteCalGreen whiteCalBlue 
+  clr pulse redR blueB greenG clearC whiteCalRed whiteCalGreen whiteCalBlue 
   blackCalRed blackCalGreen blackCalBlue 
 SECTION: ".init"
   Init _Startup 
@@ -2266,14 +2268,14 @@ SECTION: ".abs_section_2be"
 SECTION: ".abs_section_ffee"
   _Vector_8 
 SECTION: "RUNTIME"
-  _LINC _LMUL _lDivMod _LDIVU _NEG_P _LDIVS _LMODU 
+  _LINC _LMUL _lDivMod _LDIVU _NEG_P _LDIVS _LMODU _ILSEXT 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
      Name                                      Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
      _PORTAB                                      0       2       2      18   .abs_section_0
-     _DDRAB                                       2       2       2       1   .abs_section_2
+     _DDRAB                                       2       2       2       2   .abs_section_2
      _PORTE                                       8       1       1       0   .abs_section_8
      _DDRE                                        9       1       1       0   .abs_section_9
      _PEAR                                        A       1       1       0   .abs_section_a
@@ -2312,27 +2314,27 @@ OBJECT LIST SORTED BY ADDRESS
      _RTICTL                                     3B       1       1       0   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
-     _TIOS                                       40       1       1       2   .abs_section_40
+     _TIOS                                       40       1       1       1   .abs_section_40
      _CFORC                                      41       1       1       0   .abs_section_41
      _OC7M                                       42       1       1       0   .abs_section_42
      _OC7D                                       43       1       1       0   .abs_section_43
-     _TCNT                                       44       2       2       1   .abs_section_44
+     _TCNT                                       44       2       2       0   .abs_section_44
      _TSCR1                                      46       1       1       1   .abs_section_46
      _TTOV                                       47       1       1       0   .abs_section_47
-     _TCTL1                                      48       1       1       2   .abs_section_48
+     _TCTL1                                      48       1       1       0   .abs_section_48
      _TCTL2                                      49       1       1       0   .abs_section_49
      _TCTL3                                      4A       1       1       0   .abs_section_4a
      _TCTL4                                      4B       1       1       1   .abs_section_4b
      _TIE                                        4C       1       1       1   .abs_section_4c
      _TSCR2                                      4D       1       1       1   .abs_section_4d
-     _TFLG1                                      4E       1       1       3   .abs_section_4e
-     _TFLG2                                      4F       1       1       5   .abs_section_4f
+     _TFLG1                                      4E       1       1       1   .abs_section_4e
+     _TFLG2                                      4F       1       1       3   .abs_section_4f
      _TC0                                        50       2       2       0   .abs_section_50
      _TC1                                        52       2       2       0   .abs_section_52
      _TC2                                        54       2       2       0   .abs_section_54
      _TC3                                        56       2       2       0   .abs_section_56
      _TC4                                        58       2       2       0   .abs_section_58
-     _TC5                                        5A       2       2       1   .abs_section_5a
+     _TC5                                        5A       2       2       0   .abs_section_5a
      _TC6                                        5C       2       2       0   .abs_section_5c
      _TC7                                        5E       2       2       0   .abs_section_5e
      _PACTL                                      60       1       1       0   .abs_section_60
@@ -2693,7 +2695,7 @@ OBJECT LIST SORTED BY ADDRESS
      _CAN3TXDLR                                 23C       1       1       0   .abs_section_23c
      _CAN3TXTBPR                                23D       1       1       0   .abs_section_23d
      _CAN3TXTSR                                 23E       2       2       0   .abs_section_23e
-     _PTT                                       240       1       1       0   .abs_section_240
+     _PTT                                       240       1       1       1   .abs_section_240
      _PTIT                                      241       1       1       0   .abs_section_241
      _DDRT                                      242       1       1       1   .abs_section_242
      _RDRT                                      243       1       1       0   .abs_section_243
@@ -2801,17 +2803,18 @@ OBJECT LIST SORTED BY ADDRESS
      g                                         1102       2       2       1   .data       
      b                                         1104       2       2       1   .data       
      space                                     1106       2       2       1   .data       
-     pulse                                     1108       4       4      20   .bss        
-     redR                                      110C       4       4      24   .bss        
-     blueB                                     1110       4       4      24   .bss        
-     greenG                                    1114       4       4      23   .bss        
-     clearC                                    1118       4       4       4   .bss        
-     whiteCalRed                               111C       4       4       6   .bss        
-     whiteCalGreen                             1120       4       4       6   .bss        
-     whiteCalBlue                              1124       4       4       6   .bss        
-     blackCalRed                               1128       4       4       6   .bss        
-     blackCalGreen                             112C       4       4       6   .bss        
-     blackCalBlue                              1130       4       4       6   .bss        
+     clr                                       1108       2       2       1   .bss        
+     pulse                                     110A       4       4      20   .bss        
+     redR                                      110E       4       4      24   .bss        
+     blueB                                     1112       4       4      24   .bss        
+     greenG                                    1116       4       4      23   .bss        
+     clearC                                    111A       4       4       4   .bss        
+     whiteCalRed                               111E       4       4       6   .bss        
+     whiteCalGreen                             1122       4       4       6   .bss        
+     whiteCalBlue                              1126       4       4       6   .bss        
+     blackCalRed                               112A       4       4       6   .bss        
+     blackCalGreen                             112E       4       4       6   .bss        
+     blackCalBlue                              1132       4       4       6   .bss        
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029      12      18       0   .init       
      STRING.R..1                               C045       3       3       1   .rodata1    
@@ -2827,46 +2830,45 @@ OBJECT LIST SORTED BY ADDRESS
      STRING.RED.12                             C09A       4       4       1   .rodata1    
      STRING.BLUE.13                            C09E       5       5       1   .rodata1    
      STRING.GREEN.14                           C0A3       6       6       1   .rodata1    
-     main                                      C0A9     1A2     418       4   .text       
-     ringBuzzer                                C24B      38      56       5   .text       
-     calibration                               C283      F3     243       7   .text       
-     TC0_ISR                                   C376      13      19       1   .text       
-     map                                       C389      50      80       3   .text       
-     constrain                                 C3D9      2F      47       3   .text       
-     SNDelay                                   C408      23      35      18   .text       
-     scaling                                   C42B       7       7       1   .text       
-     redFilter                                 C432       7       7       1   .text       
-     greenFilter                               C439       7       7       1   .text       
-     blueFilter                                C440       7       7       1   .text       
-     clearFilter                               C447       7       7       1   .text       
-     max                                       C44E      7D     125       1   .text       
-     red_read                                  C4CB      23      35       3   .text       
-     green_read                                C4EE      23      35       2   .text       
-     blue_read                                 C511      23      35       3   .text       
-     clear_read                                C534      23      35       1   .text       
-     openLCD                                   C557      2F      47       1   .text       
-     put2lcd                                   C586      47      71       9   .text       
-     put                                       C5CD      1E      30      11   .text       
-     numLCD                                    C5EB      5D      93       2   .text       
-     _LINC                                     C648       5       5       1   RUNTIME     
-     _LMUL                                     C64D      27      39       1   RUNTIME     
-     _lDivMod                                  C674      BE     190       4   RUNTIME     
-     _LDIVU                                    C732       E      14       2   RUNTIME     
-     _NEG_P                                    C740       F      15       4   RUNTIME     
-     _LDIVS                                    C74F      35      53       1   RUNTIME     
-     _LMODU                                    C784      11      17       3   RUNTIME     
+     main                                      C0A9     189     393       4   .text       
+     calibration                               C232      F3     243       7   .text       
+     TC0_ISR                                   C325      13      19       1   .text       
+     map                                       C338      50      80       3   .text       
+     constrain                                 C388      2F      47       3   .text       
+     SNDelay                                   C3B7      23      35      18   .text       
+     initialize                                C3DA       D      13       1   .text       
+     scaling                                   C3E7       7       7       1   .text       
+     redFilter                                 C3EE       7       7       1   .text       
+     greenFilter                               C3F5       7       7       1   .text       
+     blueFilter                                C3FC       7       7       1   .text       
+     clearFilter                               C403       7       7       1   .text       
+     max                                       C40A      89     137       1   .text       
+     red_read                                  C493      23      35       3   .text       
+     green_read                                C4B6      23      35       2   .text       
+     blue_read                                 C4D9      23      35       3   .text       
+     clear_read                                C4FC      23      35       1   .text       
+     openLCD                                   C51F      2F      47       1   .text       
+     put2lcd                                   C54E      47      71       9   .text       
+     put                                       C595      1E      30      13   .text       
+     numLCD                                    C5B3      5D      93       3   .text       
+     _LINC                                     C610       5       5       1   RUNTIME     
+     _LMUL                                     C615      27      39       1   RUNTIME     
+     _lDivMod                                  C63C      BE     190       4   RUNTIME     
+     _LDIVU                                    C6FA       E      14       2   RUNTIME     
+     _NEG_P                                    C708       F      15       4   RUNTIME     
+     _LDIVS                                    C717      35      53       1   RUNTIME     
+     _LMODU                                    C74C      11      17       3   RUNTIME     
+     _ILSEXT                                   C75D       7       7       1   RUNTIME     
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
 NOT USED PROCEDURES
-main.c.o:
-  initialize 
 rtshc12.c.o (ansisi.lib):
   _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU 
   _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP _LCMP_P _LCMP_PP _LNEG _LCOM _LDEC 
-  _LMULU16x32 _LMULS16x32 _LMODS _ILSEXT _COPY _CASE_DIRECT _CASE_DIRECT_BYTE 
+  _LMULU16x32 _LMULS16x32 _LMODS _COPY _CASE_DIRECT _CASE_DIRECT_BYTE 
   _CASE_CHECKED _CASE_CHECKED_BYTE _CASE_SEARCH _CASE_SEARCH_BYTE 
   _CASE_SEARCH_8 _CASE_SEARCH_8_BYTE _FCALL _FPCMP 
 NOT USED VARIABLES
@@ -2878,22 +2880,22 @@ rtshc12.c.o (ansisi.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC795 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xC764 ---- SIZE       4 ---
 Filling bytes inserted
  00081100
-------- ROM-ADDRESS: 0xC799 ---- RAM-ADDRESS: 0x1100 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC768 ---- RAM-ADDRESS: 0x1100 ---- SIZE       2 ---
 Name of initialized Object : r
  C045
-------- ROM-ADDRESS: 0xC79B ---- RAM-ADDRESS: 0x1102 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC76A ---- RAM-ADDRESS: 0x1102 ---- SIZE       2 ---
 Name of initialized Object : g
  C048
-------- ROM-ADDRESS: 0xC79D ---- RAM-ADDRESS: 0x1104 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC76C ---- RAM-ADDRESS: 0x1104 ---- SIZE       2 ---
 Name of initialized Object : b
  C04B
-------- ROM-ADDRESS: 0xC79F ---- RAM-ADDRESS: 0x1106 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC76E ---- RAM-ADDRESS: 0x1106 ---- SIZE       2 ---
 Name of initialized Object : space
  C04E
-------- ROM-ADDRESS: 0xC7A1 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC770 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -2907,12 +2909,11 @@ space                     USES STRING....5
 Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
 main                      USES _DDRAB _TSCR1 _TSCR2 _TIOS _TCTL4 _TIE _TFLG2 
-                                scaling openLCD calibration put2lcd SNDelay _PORTAB 
-                                red_read redR blackCalRed whiteCalRed constrain map r 
-                                put main green_read greenG blackCalGreen 
+                                initialize scaling openLCD calibration put2lcd SNDelay 
+                                _PORTAB red_read redR blackCalRed whiteCalRed 
+                                constrain map r put main green_read greenG blackCalGreen 
                                 whiteCalGreen g numLCD blue_read blueB blackCalBlue 
-                                whiteCalBlue b clear_read max ringBuzzer space 
-ringBuzzer                USES _DDRT _TIOS _TCTL1 _TCNT _TC5 _TFLG2 _TFLG1 
+                                whiteCalBlue b clear_read max clr _ILSEXT space 
 calibration               USES STRING.Siyah.ve.Beyaz..6 put put2lcd 
                                 STRING.kagitlari.okutun.7 calibration SNDelay STRING.siyah.8 
                                 STRING.kalibrasyonu..9 red_read redR blackCalRed _PORTAB 
@@ -2922,13 +2923,14 @@ calibration               USES STRING.Siyah.ve.Beyaz..6 put put2lcd
 TC0_ISR                   USES pulse _LINC _TFLG1 
 map                       USES _LMUL _LDIVS 
 SNDelay                   USES _TFLG2 
+initialize                USES _DDRAB _DDRT _PTT 
 scaling                   USES _PORTAB 
 redFilter                 USES _PORTAB 
 greenFilter               USES _PORTAB 
 blueFilter                USES _PORTAB 
 clearFilter               USES _PORTAB 
-max                       USES blueB redR greenG STRING.RED.12 STRING.BLUE.13 
-                                STRING.GREEN.14 put 
+max                       USES blueB redR greenG STRING.RED.12 put 
+                                STRING.BLUE.13 STRING.GREEN.14 
 red_read                  USES redFilter redR pulse SNDelay 
 green_read                USES greenFilter greenG pulse SNDelay 
 blue_read                 USES blueFilter blueB pulse SNDelay 
@@ -2949,6 +2951,8 @@ DEPENDENCY TREE
  | 
  +- main                
  |  | 
+ |  +- initialize          
+ |  |    
  |  +- scaling             
  |  |    
  |  +- openLCD             
@@ -3035,7 +3039,7 @@ DEPENDENCY TREE
  |  |  | 
  |  |  +- put                  (see above)
  |  |     
- |  +- ringBuzzer          
+ |  +- _ILSEXT             
  |       
  +- _Startup            
     | 
@@ -3055,6 +3059,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 7
-Total size of all blocks to be downloaded: 1959
+Number of blocks to be downloaded: 6
+Total size of all blocks to be downloaded: 1910
 

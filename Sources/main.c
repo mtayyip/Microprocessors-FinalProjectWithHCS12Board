@@ -22,7 +22,8 @@ char *r="R=";
 char *g="G=";
 char *b="B=";
 char *c="C=";
-char *space="  "; 
+char *space="  ";
+int clr=0;
 unsigned long int pulse = 0;
 unsigned long int redR=0;     
 unsigned long int blueB=0;    
@@ -36,9 +37,9 @@ unsigned long int blackCalGreen=0;
 unsigned long int blackCalBlue=0;  
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
 /*--------------------------------------------------------------------------Functions----------------------------------------------------------------------*/
+int max(void);
 void scaling(void);
 void initialize(void);
-void max(void);
 void redFilter(void);
 void blueFilter(void);
 void clearFilter(void);
@@ -68,7 +69,7 @@ void main(void)
   TIE=0x01;                  //timer interrupt
   TFLG2=0x80;             //timer overflow bit clear
   
-
+  initialize();
   scaling();
   __asm CLI;
   openLCD();    
@@ -95,21 +96,15 @@ void main(void)
 	SNDelay(5);put(b);numLCD(blueB);put(space); PORTB=0xFF;	 
 
     clear_read();
-	max();
-	ringBuzzer(DO);
+	clr=max();  numLCD(clr);
 	
-	ringBuzzer(SOL);
-    ringBuzzer(FA); 
-    ringBuzzer(SOL); 
-    ringBuzzer(LA); 
-    ringBuzzer(SOL); 
-    ringBuzzer(FA); 
+    
     SNDelay(5);SNDelay(1);SNDelay(2);}            
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------BUZZER---------------------------------------------------------------------*/
-void ringBuzzer(unsigned int note) {
+/*void ringBuzzer(unsigned int note) {
   unsigned int Tcount;
   unsigned int timerOverFlow = 0; 
 
@@ -129,7 +124,7 @@ void ringBuzzer(unsigned int note) {
     if (TFLG2 & 0x80) 
       timerOverFlow = timerOverFlow + 1;}
      TCTL1=0x00;  
-}
+}        */
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------CALIBRATION-----------------------------------------------------------------------------*/ 
 void calibration(){ 
@@ -205,13 +200,13 @@ void clearFilter(void){
   PORTA = PORTA & 0x7F;}
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/  
 /*---------------------------------------------------------------COLORS----------------------------------------------------------------------------------*/   
-void max(){
-  if(blueB<redR && greenG<redR)
-      put("RED");
-  else if(redR<blueB && greenG<blueB)
-      put("BLUE");
-  else if(blueB<=greenG && redR<=greenG)
-      put("GREEN");}
+int max(void){
+  if(blueB<redR && greenG<redR){
+      put("RED"); return 0;    }
+  else if(redR<blueB && greenG<blueB) {
+      put("BLUE");return 2; }
+  else if(blueB<=greenG && redR<=greenG) {
+      put("GREEN");return 1;}  }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------READ COLOR-----------------------------------------------------------------------------*/   
 void red_read(void)  { 
