@@ -1,13 +1,20 @@
 #include <hidef.h>   
 #include "derivative.h"    
-/*-------
+/*
   T0=0UT
   A4-A5=S0-S1
   A6-A7=S2-S3
   GND=OE-GND
   VCC=VCC*/
-
+  
 #define DO 45876   //1000/261.63=3.82==>3.82/2==>1.91==>1.91*65535==>125243==>125243/2.73==>45876
+#define RE 40872
+#define MI 36412
+#define FA 34369
+#define SOL 30619
+#define LA 27278
+#define SI 24302
+#define DO2 22938
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------Variables-----------------------------------------------------------------------*/
@@ -53,7 +60,6 @@ unsigned long int constrain(unsigned long int value, unsigned long int a, unsign
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
 void main(void) 
 {
-
   DDRB=0xFF;
   TSCR1=0x80;              //TEN bit enable  
   TSCR2=0x00;              //TOI=0
@@ -63,14 +69,12 @@ void main(void)
   TFLG2=0x80;             //timer overflow bit clear
   
 
-  initialize();
   scaling();
   __asm CLI;
-  openLCD();  
+  openLCD();    
   calibration();   
 
-  
-  while(1){
+  while(1){ 
     put2lcd(0x01,0); //clear screen
     SNDelay(366);
     PORTB=0x00; 
@@ -93,32 +97,39 @@ void main(void)
     clear_read();
 	max();
 	ringBuzzer(DO);
+	
+	ringBuzzer(SOL);
+    ringBuzzer(FA); 
+    ringBuzzer(SOL); 
+    ringBuzzer(LA); 
+    ringBuzzer(SOL); 
+    ringBuzzer(FA); 
     SNDelay(5);SNDelay(1);SNDelay(2);}            
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------BUZZER---------------------------------------------------------------------*/
 void ringBuzzer(unsigned int note) {
-  
   unsigned int Tcount;
-  unsigned int tof = 0; 
-  TIOS = 0x20;  //IOS5 output compare
-  TCTL1 = 0x04; //OM5=0 and OL=1  Toogle 
-  
-  while( tof <365/4){     
+  unsigned int timerOverFlow = 0; 
+
+  DDRT=DDRT |0x20;
+  TIOS=TIOS | 0x20;
+  TCTL1=0x04;
+  while( timerOverFlow <365/4){     
     Tcount = TCNT;
     Tcount = Tcount + note;
     TC5 = Tcount;
-    TFLG2 = 0x80; 
+    TFLG2 = 0x80;
    
-    while(!(TFLG1 & TFLG1_C5F_MASK));
+
+    while(!(TFLG1 & TFLG1_C5F_MASK)); 
     TFLG1 = TFLG1 | TFLG1_C5F_MASK;
       
     if (TFLG2 & 0x80) 
-      tof = tof + 1;
-    }
-    TCTL1 = 0x00;//disconnect
- }
+      timerOverFlow = timerOverFlow + 1;}
+     TCTL1=0x00;  
+}
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------CALIBRATION-----------------------------------------------------------------------------*/ 
 void calibration(){ 
@@ -166,11 +177,11 @@ void SNDelay(unsigned int x){
     while(!(TFLG2 & 0x80));
     overflow++;
     TFLG2 = 0x80;}}
- /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------PHOTODIODE TYPE-----------------------------------------------------------------------*/ 
-void initialize(void){ //Bit 0  input  other pins are output.DDRA=1111-0000/  DDRT=1111-1110
+void initialize(void){ //DDRA=1111-0000
   DDRA=DDRA| 0xF0; 
-  DDRT=DDRT| 0xFE; 
+  DDRT=0xFE; //  DDRT=1111-1110    1=OUTPUT,0=INPUT     Bit 0  input  other pins are output.
   PTT=PTT |0x01;}
     
 void scaling(void){
