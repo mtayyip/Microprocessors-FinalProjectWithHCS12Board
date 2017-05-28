@@ -1147,13 +1147,13 @@ MODULE:                 -- main.c.o --
      STRING.beyaz.10                           C086       6       6       1   .rodata1    
      STRING.kalibrasyonu..11                   C08C       E      14       1   .rodata1    
      STRING.RED.12                             C09A       4       4       1   .rodata1    
-     STRING.BLUE.13                            C09E       5       5       1   .rodata1    
-     STRING.GREEN.14                           C0A3       6       6       1   .rodata1    
+     STRING.GREEN.13                           C09E       6       6       1   .rodata1    
+     STRING.BLUE.14                            C0A4       5       5       1   .rodata1    
      r                                         1100       2       2       1   .data       
      g                                         1102       2       2       1   .data       
      b                                         1104       2       2       1   .data       
      space                                     1106       2       2       1   .data       
-     clr                                       1108       2       2       1   .bss        
+     color                                     1108       2       2       1   .bss        
      pulse                                     110A       4       4      20   .bss        
      redR                                      110E       4       4      24   .bss        
      blueB                                     1112       4       4      24   .bss        
@@ -1206,15 +1206,15 @@ SECTION: ".text"
 SECTION: ".data"
   r g b space 
 SECTION: ".bss"
-  clr pulse redR blueB greenG clearC whiteCalRed whiteCalGreen whiteCalBlue 
+  color pulse redR blueB greenG clearC whiteCalRed whiteCalGreen whiteCalBlue 
   blackCalRed blackCalGreen blackCalBlue 
 SECTION: ".init"
   Init _Startup 
 SECTION: ".rodata1"
   STRING.R..1 STRING.G..2 STRING.B..3 STRING....5 STRING.Siyah.ve.Beyaz..6 
   STRING.kagitlari.okutun.7 STRING.siyah.8 STRING.kalibrasyonu..9 
-  STRING.beyaz.10 STRING.kalibrasyonu..11 STRING.RED.12 STRING.BLUE.13 
-  STRING.GREEN.14 
+  STRING.beyaz.10 STRING.kalibrasyonu..11 STRING.RED.12 STRING.GREEN.13 
+  STRING.BLUE.14 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -2803,7 +2803,7 @@ OBJECT LIST SORTED BY ADDRESS
      g                                         1102       2       2       1   .data       
      b                                         1104       2       2       1   .data       
      space                                     1106       2       2       1   .data       
-     clr                                       1108       2       2       1   .bss        
+     color                                     1108       2       2       1   .bss        
      pulse                                     110A       4       4      20   .bss        
      redR                                      110E       4       4      24   .bss        
      blueB                                     1112       4       4      24   .bss        
@@ -2828,8 +2828,8 @@ OBJECT LIST SORTED BY ADDRESS
      STRING.beyaz.10                           C086       6       6       1   .rodata1    
      STRING.kalibrasyonu..11                   C08C       E      14       1   .rodata1    
      STRING.RED.12                             C09A       4       4       1   .rodata1    
-     STRING.BLUE.13                            C09E       5       5       1   .rodata1    
-     STRING.GREEN.14                           C0A3       6       6       1   .rodata1    
+     STRING.GREEN.13                           C09E       6       6       1   .rodata1    
+     STRING.BLUE.14                            C0A4       5       5       1   .rodata1    
      main                                      C0A9     189     393       4   .text       
      calibration                               C232      F3     243       7   .text       
      TC0_ISR                                   C325      13      19       1   .text       
@@ -2913,7 +2913,7 @@ main                      USES _DDRAB _TSCR1 _TSCR2 _TIOS _TCTL4 _TIE _TFLG2
                                 _PORTAB red_read redR blackCalRed whiteCalRed 
                                 constrain map r put main green_read greenG blackCalGreen 
                                 whiteCalGreen g numLCD blue_read blueB blackCalBlue 
-                                whiteCalBlue b clear_read max clr _ILSEXT space 
+                                whiteCalBlue b clear_read max color _ILSEXT space 
 calibration               USES STRING.Siyah.ve.Beyaz..6 put put2lcd 
                                 STRING.kagitlari.okutun.7 calibration SNDelay STRING.siyah.8 
                                 STRING.kalibrasyonu..9 red_read redR blackCalRed _PORTAB 
@@ -2930,7 +2930,7 @@ greenFilter               USES _PORTAB
 blueFilter                USES _PORTAB 
 clearFilter               USES _PORTAB 
 max                       USES blueB redR greenG STRING.RED.12 put 
-                                STRING.BLUE.13 STRING.GREEN.14 
+                                STRING.GREEN.13 STRING.BLUE.14 
 red_read                  USES redFilter redR pulse SNDelay 
 green_read                USES greenFilter greenG pulse SNDelay 
 blue_read                 USES blueFilter blueB pulse SNDelay 

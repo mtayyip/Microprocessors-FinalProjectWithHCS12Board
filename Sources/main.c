@@ -23,7 +23,7 @@ char *g="G=";
 char *b="B=";
 char *c="C=";
 char *space="  ";
-int clr=0;
+int color=0;
 unsigned long int pulse = 0;
 unsigned long int redR=0;     
 unsigned long int blueB=0;    
@@ -96,7 +96,7 @@ void main(void)
 	SNDelay(5);put(b);numLCD(blueB);put(space); PORTB=0xFF;	 
 
     clear_read();
-	clr=max();  numLCD(clr);
+	color=max();  numLCD(color);
 	
     
     SNDelay(5);SNDelay(1);SNDelay(2);}            
@@ -203,10 +203,11 @@ void clearFilter(void){
 int max(void){
   if(blueB<redR && greenG<redR){
       put("RED"); return 0;    }
+  else if(blueB<=greenG && redR<=greenG) {
+      put("GREEN");return 1;}      
   else if(redR<blueB && greenG<blueB) {
       put("BLUE");return 2; }
-  else if(blueB<=greenG && redR<=greenG) {
-      put("GREEN");return 1;}  }
+  }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------READ COLOR-----------------------------------------------------------------------------*/   
 void red_read(void)  { 
