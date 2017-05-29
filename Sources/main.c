@@ -38,6 +38,8 @@ unsigned long int blackCalBlue=0;
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
 /*--------------------------------------------------------------------------Functions----------------------------------------------------------------------*/
 int max(void);
+void upMotor(int x);
+void downMotor(int x);
 void scaling(void);
 void initialize(void);
 void redFilter(void);
@@ -68,18 +70,22 @@ void main(void)
   TCTL4= 0x02;             //falling edge
   TIE=0x01;                  //timer interrupt
   TFLG2=0x80;             //timer overflow bit clear
-  
+ 
   initialize();
   scaling();
   __asm CLI;
-  openLCD();    
+  openLCD();      
   calibration();   
 
+
   while(1){ 
+    upMotor(23); SNDelay(1);SNDelay(1);
     put2lcd(0x01,0); //clear screen
     SNDelay(366);
-    PORTB=0x00; 
+    PORTB=0x00;  SNDelay(1);
              
+             
+    upMotor(17);SNDelay(2);         
     red_read();
     redR=constrain(redR,blackCalRed,whiteCalRed);    
     redR = map(redR, blackCalRed, whiteCalRed,0,255);    
@@ -98,20 +104,32 @@ void main(void)
     clear_read();
 	color=max();  numLCD(color);
 	
-    
-    SNDelay(5);SNDelay(1);SNDelay(2);}            
+	
+	if(color==1)//color is=red
+	  downMotor(9);
+	else if(color==2)//color is=green
+	  downMotor(13);
+	else if(color==3)//color is=blue
+	  downMotor(17);	
+	else; //color is=unknown
+
+	
+	SNDelay(1);upMotor(13); 
+    SNDelay(5);SNDelay(1);SNDelay(2);    
+    }            
 }
+
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------BUZZER---------------------------------------------------------------------*/
-/*void ringBuzzer(unsigned int note) {
+void ringBuzzer(unsigned int note) {
   unsigned int Tcount;
   unsigned int timerOverFlow = 0; 
 
   DDRT=DDRT |0x20;
   TIOS=TIOS | 0x20;
   TCTL1=0x04;
-  while( timerOverFlow <365/4){     
+  while( timerOverFlow <365/2){     
     Tcount = TCNT;
     Tcount = Tcount + note;
     TC5 = Tcount;
@@ -124,8 +142,25 @@ void main(void)
     if (TFLG2 & 0x80) 
       timerOverFlow = timerOverFlow + 1;}
      TCTL1=0x00;  
-}        */
+}        
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------INTERRUPT-------------------------------------------------------------------------------*/ 
+interrupt ( ( (0x10000-Vtimch0) /2) -1)  void TC0_ISR(void) {
+  pulse++; 
+  TFLG1=TFLG1 | 0x01; }    
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------*/                                                   
+/*-------------------------------------------------------MAP-CONSTRAIN--------------------------------------------------------------------------------*/ 
+//references:https://www.arduino.cc/en/reference/map
+long map(long value, long fromLow, long fromHigh, long toLow, long toHigh){
+  return ((value - fromLow) * (toHigh - toLow)) / ((fromHigh - fromLow) + toLow);}
+ 
+//references:https://www.arduino.cc/en/reference/constrain 
+unsigned long int constrain(unsigned long int value,unsigned long int a, unsigned long int b){ 
+  if(value < a)  return a;
+  else if(value > b)  return b;
+  else return value;}
+ /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------CALIBRATION-----------------------------------------------------------------------------*/ 
 void calibration(){ 
   put("Siyah ve Beyaz "); put2lcd(0xC0,0); put("kagitlari okutun"); 
@@ -146,20 +181,34 @@ void calibration(){
   green_read();whiteCalGreen=greenG; PORTB=0x1F;    SNDelay(4); 
   blue_read();  whiteCalBlue=blueB; PORTB=0xFF;           SNDelay(4);  }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------INTERRUPT-------------------------------------------------------------------------------*/ 
-interrupt ( ( (0x10000-Vtimch0) /2) -1)  void TC0_ISR(void) {
-  pulse++; 
-  TFLG1=TFLG1 | 0x01; }                                                     
-/*------------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
-//references:https://www.arduino.cc/en/reference/map
-long map(long value, long fromLow, long fromHigh, long toLow, long toHigh){
-  return ((value - fromLow) * (toHigh - toLow)) / ((fromHigh - fromLow) + toLow);}
- 
-//references:https://www.arduino.cc/en/reference/constrain 
-unsigned long int constrain(unsigned long int value,unsigned long int a, unsigned long int b){ 
-  if(value < a)  return a;
-  else if(value > b)  return b;
-  else return value;} 
+/*-----------------------------------------------------------------------------MOTORS--------------------------------------------------------------------*/
+//23=left---5=right
+void upMotor(int value){  
+  PWMPRCLK = 0x03; // Set clock A prescaler to 8
+  PWMSCLA = 150; // Set clock A scaler to 150
+  PWMCLK = 0x10; // Set clock 4 to use scaled clock A
+  PWMPOL = 0x10; // Set clock A for positive polarity pulse
+  PWMCAE=0x0; 
+  PWMCTL=0x0;	
+  PWMPER4 = 200; // Set PWM4 period (200 cycles = 20 ms)
+  PWMDTY4 =value; // Set PWM4 duty cycle (6: right,11: middle 17:left)
+  PWMCNT4=10;
+  PWME = 0x10; // Enable PWM4
+}
+
+//23=left---5=right
+void downMotor(int value){  
+  PWMPRCLK = 0x03; // Set clock A prescaler to 8
+  PWMSCLA = 150; // Set clock A scaler to 150
+  PWMCLK = 0x20; // Set clock 5 to use scaled clock A
+  PWMPOL = 0x20; // Set clock A for positive polarity pulse
+  PWMCAE=0x0; 
+  PWMCTL=0x0;	
+  PWMPER5 = 200; // Set PWM5 period (200 cycles = 20 ms)
+  PWMDTY5 =value; // Set PWM5 duty cycle (6: right,11: middle 17:left)
+  PWMCNT5=20;
+  PWME = 0x20; // Enable PWM5
+}   
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------DELAY-----------------------------------------------------------------------------------*/
 //SNDelay = 1   ==> 1 sn
@@ -201,12 +250,14 @@ void clearFilter(void){
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/  
 /*---------------------------------------------------------------COLORS----------------------------------------------------------------------------------*/   
 int max(void){
-  if(blueB<redR && greenG<redR){
-      put("RED"); return 0;    }
+  if(blueB>95 && greenG>95 && redR>95){
+    put("WHITE"); return 0;}
+  else if(blueB<redR && greenG<redR){
+      put("RED"); return 1;    }
   else if(blueB<=greenG && redR<=greenG) {
-      put("GREEN");return 1;}      
+      put("GREEN");return 2;}      
   else if(redR<blueB && greenG<blueB) {
-      put("BLUE");return 2; }
+      put("BLUE");return 3; }
   }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------READ COLOR-----------------------------------------------------------------------------*/   

@@ -25,7 +25,7 @@ _startupData is allocated at 0xC03B and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
   _Range   pZeroOut       0x1100     54
-  _Copy    *toCopyDownBeg 0xC764
+  _Copy    *toCopyDownBeg 0xC830
 } _startupData;
 
 *********************************************************************************************
@@ -34,9 +34,9 @@ Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
 .init                             59     R     0xC000     0xC03A   ROM_C000
 .startData                        10     R     0xC03B     0xC044   ROM_C000
-.rodata1                         100     R     0xC045     0xC0A8   ROM_C000
-.text                           1383     R     0xC0A9     0xC60F   ROM_C000
-.copy                             14     R     0xC764     0xC771   ROM_C000
+.rodata1                         106     R     0xC045     0xC0AE   ROM_C000
+.text                           1581     R     0xC0AF     0xC6DB   ROM_C000
+.copy                             14     R     0xC830     0xC83D   ROM_C000
 .stack                           256   R/W     0x1000     0x10FF   RAM
 .data                              8   R/W     0x1100     0x1107   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
@@ -566,11 +566,11 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_2be                   2   N/I      0x2BE      0x2BF   .absSeg524
 .abs_section_ffee                  2     R     0xFFEE     0xFFEF   .absSeg525
 .bss                              46   R/W     0x1108     0x1135   RAM
-RUNTIME                          340     R     0xC610     0xC763   ROM_C000
+RUNTIME                          340     R     0xC6DC     0xC82F   ROM_C000
 .vectSeg526_vect                   2     R     0xFFFE     0xFFFF   .vectSeg526
 
 Summary of section sizes per section type:
-READ_ONLY (R):         776 (dec:     1910)
+READ_ONLY (R):         842 (dec:     2114)
 READ_WRITE (R/W):      136 (dec:      310)
 NO_INIT (N/I):         24E (dec:      590)
 
@@ -653,13 +653,13 @@ MODULE:                 -- mc9s12dp256.c.o --
      _ATD0STAT1                                  8B       1       1       0   .abs_section_8b
      _ATD0DIEN                                   8D       1       1       0   .abs_section_8d
      _PORTAD0                                    8F       1       1       0   .abs_section_8f
-     _PWME                                       A0       1       1       0   .abs_section_a0
-     _PWMPOL                                     A1       1       1       0   .abs_section_a1
-     _PWMCLK                                     A2       1       1       0   .abs_section_a2
-     _PWMPRCLK                                   A3       1       1       0   .abs_section_a3
-     _PWMCAE                                     A4       1       1       0   .abs_section_a4
-     _PWMCTL                                     A5       1       1       0   .abs_section_a5
-     _PWMSCLA                                    A8       1       1       0   .abs_section_a8
+     _PWME                                       A0       1       1       2   .abs_section_a0
+     _PWMPOL                                     A1       1       1       2   .abs_section_a1
+     _PWMCLK                                     A2       1       1       2   .abs_section_a2
+     _PWMPRCLK                                   A3       1       1       2   .abs_section_a3
+     _PWMCAE                                     A4       1       1       2   .abs_section_a4
+     _PWMCTL                                     A5       1       1       2   .abs_section_a5
+     _PWMSCLA                                    A8       1       1       2   .abs_section_a8
      _PWMSCLB                                    A9       1       1       0   .abs_section_a9
      _PWMSDN                                     C4       1       1       0   .abs_section_c4
      _SCI0CR1                                    CA       1       1       0   .abs_section_ca
@@ -1080,15 +1080,15 @@ MODULE:                 -- mc9s12dp256.c.o --
      _ATD0DR7                                    9E       2       2       0   .abs_section_9e
      _PWMCNT01                                   AC       2       2       0   .abs_section_ac
      _PWMCNT23                                   AE       2       2       0   .abs_section_ae
-     _PWMCNT45                                   B0       2       2       0   .abs_section_b0
+     _PWMCNT45                                   B0       2       2       2   .abs_section_b0
      _PWMCNT67                                   B2       2       2       0   .abs_section_b2
      _PWMPER01                                   B4       2       2       0   .abs_section_b4
      _PWMPER23                                   B6       2       2       0   .abs_section_b6
-     _PWMPER45                                   B8       2       2       0   .abs_section_b8
+     _PWMPER45                                   B8       2       2       2   .abs_section_b8
      _PWMPER67                                   BA       2       2       0   .abs_section_ba
      _PWMDTY01                                   BC       2       2       0   .abs_section_bc
      _PWMDTY23                                   BE       2       2       0   .abs_section_be
-     _PWMDTY45                                   C0       2       2       0   .abs_section_c0
+     _PWMDTY45                                   C0       2       2       2   .abs_section_c0
      _PWMDTY67                                   C2       2       2       0   .abs_section_c2
      _SCI0BD                                     C8       2       2       0   .abs_section_c8
      _SCI1BD                                     D0       2       2       0   .abs_section_d0
@@ -1114,27 +1114,29 @@ MODULE:                 -- mc9s12dp256.c.o --
      _CAN4TXTSR                                 2BE       2       2       0   .abs_section_2be
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C0A9     189     393       4   .text       
-     calibration                               C232      F3     243       7   .text       
-     TC0_ISR                                   C325      13      19       1   .text       
-     map                                       C338      50      80       3   .text       
-     constrain                                 C388      2F      47       3   .text       
-     SNDelay                                   C3B7      23      35      18   .text       
-     initialize                                C3DA       D      13       1   .text       
-     scaling                                   C3E7       7       7       1   .text       
-     redFilter                                 C3EE       7       7       1   .text       
-     greenFilter                               C3F5       7       7       1   .text       
-     blueFilter                                C3FC       7       7       1   .text       
-     clearFilter                               C403       7       7       1   .text       
-     max                                       C40A      89     137       1   .text       
-     red_read                                  C493      23      35       3   .text       
-     green_read                                C4B6      23      35       2   .text       
-     blue_read                                 C4D9      23      35       3   .text       
-     clear_read                                C4FC      23      35       1   .text       
-     openLCD                                   C51F      2F      47       1   .text       
-     put2lcd                                   C54E      47      71       9   .text       
-     put                                       C595      1E      30      13   .text       
-     numLCD                                    C5B3      5D      93       3   .text       
+     main                                      C0AF     1D2     466       9   .text       
+     TC0_ISR                                   C281      13      19       1   .text       
+     map                                       C294      50      80       3   .text       
+     constrain                                 C2E4      2F      47       3   .text       
+     calibration                               C313      F3     243       7   .text       
+     upMotor                                   C406      26      38       3   .text       
+     downMotor                                 C42C      26      38       1   .text       
+     SNDelay                                   C452      23      35      15   .text       
+     initialize                                C475       D      13       1   .text       
+     scaling                                   C482       7       7       1   .text       
+     redFilter                                 C489       7       7       1   .text       
+     greenFilter                               C490       7       7       1   .text       
+     blueFilter                                C497       7       7       1   .text       
+     clearFilter                               C49E       7       7       1   .text       
+     max                                       C4A5      BA     186       1   .text       
+     red_read                                  C55F      23      35       3   .text       
+     green_read                                C582      23      35       2   .text       
+     blue_read                                 C5A5      23      35       3   .text       
+     clear_read                                C5C8      23      35       1   .text       
+     openLCD                                   C5EB      2F      47       1   .text       
+     put2lcd                                   C61A      47      71       9   .text       
+     put                                       C661      1E      30      14   .text       
+     numLCD                                    C67F      5D      93       3   .text       
 - VARIABLES:
      STRING.R..1                               C045       3       3       1   .rodata1    
      STRING.G..2                               C048       3       3       1   .rodata1    
@@ -1146,18 +1148,19 @@ MODULE:                 -- main.c.o --
      STRING.kalibrasyonu..9                    C078       E      14       1   .rodata1    
      STRING.beyaz.10                           C086       6       6       1   .rodata1    
      STRING.kalibrasyonu..11                   C08C       E      14       1   .rodata1    
-     STRING.RED.12                             C09A       4       4       1   .rodata1    
-     STRING.GREEN.13                           C09E       6       6       1   .rodata1    
-     STRING.BLUE.14                            C0A4       5       5       1   .rodata1    
+     STRING.WHITE.12                           C09A       6       6       1   .rodata1    
+     STRING.RED.13                             C0A0       4       4       1   .rodata1    
+     STRING.GREEN.14                           C0A4       6       6       1   .rodata1    
+     STRING.BLUE.15                            C0AA       5       5       1   .rodata1    
      r                                         1100       2       2       1   .data       
      g                                         1102       2       2       1   .data       
      b                                         1104       2       2       1   .data       
      space                                     1106       2       2       1   .data       
-     color                                     1108       2       2       1   .bss        
+     color                                     1108       2       2       2   .bss        
      pulse                                     110A       4       4      20   .bss        
-     redR                                      110E       4       4      24   .bss        
-     blueB                                     1112       4       4      24   .bss        
-     greenG                                    1116       4       4      23   .bss        
+     redR                                      110E       4       4      26   .bss        
+     blueB                                     1112       4       4      26   .bss        
+     greenG                                    1116       4       4      25   .bss        
      clearC                                    111A       4       4       4   .bss        
      whiteCalRed                               111E       4       4       6   .bss        
      whiteCalGreen                             1122       4       4       6   .bss        
@@ -1176,14 +1179,14 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                          1100       0       0       1               
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LINC                                     C610       5       5       1   RUNTIME     
-     _LMUL                                     C615      27      39       1   RUNTIME     
-     _lDivMod                                  C63C      BE     190       4   RUNTIME     
-     _LDIVU                                    C6FA       E      14       2   RUNTIME     
-     _NEG_P                                    C708       F      15       4   RUNTIME     
-     _LDIVS                                    C717      35      53       1   RUNTIME     
-     _LMODU                                    C74C      11      17       3   RUNTIME     
-     _ILSEXT                                   C75D       7       7       1   RUNTIME     
+     _LINC                                     C6DC       5       5       1   RUNTIME     
+     _LMUL                                     C6E1      27      39       1   RUNTIME     
+     _lDivMod                                  C708      BE     190       4   RUNTIME     
+     _LDIVU                                    C7C6       E      14       2   RUNTIME     
+     _NEG_P                                    C7D4       F      15       4   RUNTIME     
+     _LDIVS                                    C7E3      35      53       1   RUNTIME     
+     _LMODU                                    C818      11      17       3   RUNTIME     
+     _ILSEXT                                   C829       7       7       1   RUNTIME     
 - VARIABLES:
 
 *********************************************************************************************
@@ -1191,7 +1194,7 @@ MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12dp256.c.o                            590      0      0
-  main.c.o                                    54   1383    102
+  main.c.o                                    54   1581    108
   Start12.c.o                                  0     59      0
   rtshc12.c.o (ansisi.lib)                     0    340      0
   other                                      256     12     14
@@ -1200,9 +1203,9 @@ MODULE STATISTIC
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  main calibration TC0_ISR map constrain SNDelay initialize scaling redFilter 
-  greenFilter blueFilter clearFilter max red_read green_read blue_read 
-  clear_read openLCD put2lcd put numLCD 
+  main TC0_ISR map constrain calibration upMotor downMotor SNDelay initialize 
+  scaling redFilter greenFilter blueFilter clearFilter max red_read green_read 
+  blue_read clear_read openLCD put2lcd put numLCD 
 SECTION: ".data"
   r g b space 
 SECTION: ".bss"
@@ -1213,8 +1216,8 @@ SECTION: ".init"
 SECTION: ".rodata1"
   STRING.R..1 STRING.G..2 STRING.B..3 STRING....5 STRING.Siyah.ve.Beyaz..6 
   STRING.kagitlari.okutun.7 STRING.siyah.8 STRING.kalibrasyonu..9 
-  STRING.beyaz.10 STRING.kalibrasyonu..11 STRING.RED.12 STRING.GREEN.13 
-  STRING.BLUE.14 
+  STRING.beyaz.10 STRING.kalibrasyonu..11 STRING.WHITE.12 STRING.RED.13 
+  STRING.GREEN.14 STRING.BLUE.15 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -2371,25 +2374,25 @@ OBJECT LIST SORTED BY ADDRESS
      _ATD0DR5                                    9A       2       2       0   .abs_section_9a
      _ATD0DR6                                    9C       2       2       0   .abs_section_9c
      _ATD0DR7                                    9E       2       2       0   .abs_section_9e
-     _PWME                                       A0       1       1       0   .abs_section_a0
-     _PWMPOL                                     A1       1       1       0   .abs_section_a1
-     _PWMCLK                                     A2       1       1       0   .abs_section_a2
-     _PWMPRCLK                                   A3       1       1       0   .abs_section_a3
-     _PWMCAE                                     A4       1       1       0   .abs_section_a4
-     _PWMCTL                                     A5       1       1       0   .abs_section_a5
-     _PWMSCLA                                    A8       1       1       0   .abs_section_a8
+     _PWME                                       A0       1       1       2   .abs_section_a0
+     _PWMPOL                                     A1       1       1       2   .abs_section_a1
+     _PWMCLK                                     A2       1       1       2   .abs_section_a2
+     _PWMPRCLK                                   A3       1       1       2   .abs_section_a3
+     _PWMCAE                                     A4       1       1       2   .abs_section_a4
+     _PWMCTL                                     A5       1       1       2   .abs_section_a5
+     _PWMSCLA                                    A8       1       1       2   .abs_section_a8
      _PWMSCLB                                    A9       1       1       0   .abs_section_a9
      _PWMCNT01                                   AC       2       2       0   .abs_section_ac
      _PWMCNT23                                   AE       2       2       0   .abs_section_ae
-     _PWMCNT45                                   B0       2       2       0   .abs_section_b0
+     _PWMCNT45                                   B0       2       2       2   .abs_section_b0
      _PWMCNT67                                   B2       2       2       0   .abs_section_b2
      _PWMPER01                                   B4       2       2       0   .abs_section_b4
      _PWMPER23                                   B6       2       2       0   .abs_section_b6
-     _PWMPER45                                   B8       2       2       0   .abs_section_b8
+     _PWMPER45                                   B8       2       2       2   .abs_section_b8
      _PWMPER67                                   BA       2       2       0   .abs_section_ba
      _PWMDTY01                                   BC       2       2       0   .abs_section_bc
      _PWMDTY23                                   BE       2       2       0   .abs_section_be
-     _PWMDTY45                                   C0       2       2       0   .abs_section_c0
+     _PWMDTY45                                   C0       2       2       2   .abs_section_c0
      _PWMDTY67                                   C2       2       2       0   .abs_section_c2
      _PWMSDN                                     C4       1       1       0   .abs_section_c4
      _SCI0BD                                     C8       2       2       0   .abs_section_c8
@@ -2803,11 +2806,11 @@ OBJECT LIST SORTED BY ADDRESS
      g                                         1102       2       2       1   .data       
      b                                         1104       2       2       1   .data       
      space                                     1106       2       2       1   .data       
-     color                                     1108       2       2       1   .bss        
+     color                                     1108       2       2       2   .bss        
      pulse                                     110A       4       4      20   .bss        
-     redR                                      110E       4       4      24   .bss        
-     blueB                                     1112       4       4      24   .bss        
-     greenG                                    1116       4       4      23   .bss        
+     redR                                      110E       4       4      26   .bss        
+     blueB                                     1112       4       4      26   .bss        
+     greenG                                    1116       4       4      25   .bss        
      clearC                                    111A       4       4       4   .bss        
      whiteCalRed                               111E       4       4       6   .bss        
      whiteCalGreen                             1122       4       4       6   .bss        
@@ -2827,44 +2830,49 @@ OBJECT LIST SORTED BY ADDRESS
      STRING.kalibrasyonu..9                    C078       E      14       1   .rodata1    
      STRING.beyaz.10                           C086       6       6       1   .rodata1    
      STRING.kalibrasyonu..11                   C08C       E      14       1   .rodata1    
-     STRING.RED.12                             C09A       4       4       1   .rodata1    
-     STRING.GREEN.13                           C09E       6       6       1   .rodata1    
-     STRING.BLUE.14                            C0A4       5       5       1   .rodata1    
-     main                                      C0A9     189     393       4   .text       
-     calibration                               C232      F3     243       7   .text       
-     TC0_ISR                                   C325      13      19       1   .text       
-     map                                       C338      50      80       3   .text       
-     constrain                                 C388      2F      47       3   .text       
-     SNDelay                                   C3B7      23      35      18   .text       
-     initialize                                C3DA       D      13       1   .text       
-     scaling                                   C3E7       7       7       1   .text       
-     redFilter                                 C3EE       7       7       1   .text       
-     greenFilter                               C3F5       7       7       1   .text       
-     blueFilter                                C3FC       7       7       1   .text       
-     clearFilter                               C403       7       7       1   .text       
-     max                                       C40A      89     137       1   .text       
-     red_read                                  C493      23      35       3   .text       
-     green_read                                C4B6      23      35       2   .text       
-     blue_read                                 C4D9      23      35       3   .text       
-     clear_read                                C4FC      23      35       1   .text       
-     openLCD                                   C51F      2F      47       1   .text       
-     put2lcd                                   C54E      47      71       9   .text       
-     put                                       C595      1E      30      13   .text       
-     numLCD                                    C5B3      5D      93       3   .text       
-     _LINC                                     C610       5       5       1   RUNTIME     
-     _LMUL                                     C615      27      39       1   RUNTIME     
-     _lDivMod                                  C63C      BE     190       4   RUNTIME     
-     _LDIVU                                    C6FA       E      14       2   RUNTIME     
-     _NEG_P                                    C708       F      15       4   RUNTIME     
-     _LDIVS                                    C717      35      53       1   RUNTIME     
-     _LMODU                                    C74C      11      17       3   RUNTIME     
-     _ILSEXT                                   C75D       7       7       1   RUNTIME     
+     STRING.WHITE.12                           C09A       6       6       1   .rodata1    
+     STRING.RED.13                             C0A0       4       4       1   .rodata1    
+     STRING.GREEN.14                           C0A4       6       6       1   .rodata1    
+     STRING.BLUE.15                            C0AA       5       5       1   .rodata1    
+     main                                      C0AF     1D2     466       9   .text       
+     TC0_ISR                                   C281      13      19       1   .text       
+     map                                       C294      50      80       3   .text       
+     constrain                                 C2E4      2F      47       3   .text       
+     calibration                               C313      F3     243       7   .text       
+     upMotor                                   C406      26      38       3   .text       
+     downMotor                                 C42C      26      38       1   .text       
+     SNDelay                                   C452      23      35      15   .text       
+     initialize                                C475       D      13       1   .text       
+     scaling                                   C482       7       7       1   .text       
+     redFilter                                 C489       7       7       1   .text       
+     greenFilter                               C490       7       7       1   .text       
+     blueFilter                                C497       7       7       1   .text       
+     clearFilter                               C49E       7       7       1   .text       
+     max                                       C4A5      BA     186       1   .text       
+     red_read                                  C55F      23      35       3   .text       
+     green_read                                C582      23      35       2   .text       
+     blue_read                                 C5A5      23      35       3   .text       
+     clear_read                                C5C8      23      35       1   .text       
+     openLCD                                   C5EB      2F      47       1   .text       
+     put2lcd                                   C61A      47      71       9   .text       
+     put                                       C661      1E      30      14   .text       
+     numLCD                                    C67F      5D      93       3   .text       
+     _LINC                                     C6DC       5       5       1   RUNTIME     
+     _LMUL                                     C6E1      27      39       1   RUNTIME     
+     _lDivMod                                  C708      BE     190       4   RUNTIME     
+     _LDIVU                                    C7C6       E      14       2   RUNTIME     
+     _NEG_P                                    C7D4       F      15       4   RUNTIME     
+     _LDIVS                                    C7E3      35      53       1   RUNTIME     
+     _LMODU                                    C818      11      17       3   RUNTIME     
+     _ILSEXT                                   C829       7       7       1   RUNTIME     
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
 NOT USED PROCEDURES
+main.c.o:
+  ringBuzzer 
 rtshc12.c.o (ansisi.lib):
   _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU 
   _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP _LCMP_P _LCMP_PP _LNEG _LCOM _LDEC 
@@ -2880,22 +2888,22 @@ rtshc12.c.o (ansisi.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC764 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xC830 ---- SIZE       4 ---
 Filling bytes inserted
  00081100
-------- ROM-ADDRESS: 0xC768 ---- RAM-ADDRESS: 0x1100 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC834 ---- RAM-ADDRESS: 0x1100 ---- SIZE       2 ---
 Name of initialized Object : r
  C045
-------- ROM-ADDRESS: 0xC76A ---- RAM-ADDRESS: 0x1102 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC836 ---- RAM-ADDRESS: 0x1102 ---- SIZE       2 ---
 Name of initialized Object : g
  C048
-------- ROM-ADDRESS: 0xC76C ---- RAM-ADDRESS: 0x1104 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC838 ---- RAM-ADDRESS: 0x1104 ---- SIZE       2 ---
 Name of initialized Object : b
  C04B
-------- ROM-ADDRESS: 0xC76E ---- RAM-ADDRESS: 0x1106 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC83A ---- RAM-ADDRESS: 0x1106 ---- SIZE       2 ---
 Name of initialized Object : space
  C04E
-------- ROM-ADDRESS: 0xC770 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC83C ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -2909,19 +2917,24 @@ space                     USES STRING....5
 Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
 main                      USES _DDRAB _TSCR1 _TSCR2 _TIOS _TCTL4 _TIE _TFLG2 
-                                initialize scaling openLCD calibration put2lcd SNDelay 
-                                _PORTAB red_read redR blackCalRed whiteCalRed 
-                                constrain map r put main green_read greenG blackCalGreen 
-                                whiteCalGreen g numLCD blue_read blueB blackCalBlue 
-                                whiteCalBlue b clear_read max color _ILSEXT space 
+                                initialize scaling openLCD calibration upMotor main 
+                                put2lcd SNDelay _PORTAB red_read redR blackCalRed 
+                                whiteCalRed constrain map r put green_read greenG 
+                                blackCalGreen whiteCalGreen g numLCD blue_read blueB 
+                                blackCalBlue whiteCalBlue b clear_read max color _ILSEXT 
+                                downMotor space 
+TC0_ISR                   USES pulse _LINC _TFLG1 
+map                       USES _LMUL _LDIVS 
 calibration               USES STRING.Siyah.ve.Beyaz..6 put put2lcd 
                                 STRING.kagitlari.okutun.7 calibration SNDelay STRING.siyah.8 
                                 STRING.kalibrasyonu..9 red_read redR blackCalRed _PORTAB 
                                 blackCalGreen greenG blue_read blueB blackCalBlue 
                                 STRING.beyaz.10 STRING.kalibrasyonu..11 whiteCalRed 
                                 whiteCalGreen whiteCalBlue green_read 
-TC0_ISR                   USES pulse _LINC _TFLG1 
-map                       USES _LMUL _LDIVS 
+upMotor                   USES _PWMPRCLK _PWMSCLA _PWMCLK _PWMPOL _PWMCAE 
+                                _PWMCTL _PWMPER45 _PWMDTY45 _PWMCNT45 _PWME 
+downMotor                 USES _PWMPRCLK _PWMSCLA _PWMCLK _PWMPOL _PWMCAE 
+                                _PWMCTL _PWMPER45 _PWMDTY45 _PWMCNT45 _PWME 
 SNDelay                   USES _TFLG2 
 initialize                USES _DDRAB _DDRT _PTT 
 scaling                   USES _PORTAB 
@@ -2929,8 +2942,8 @@ redFilter                 USES _PORTAB
 greenFilter               USES _PORTAB 
 blueFilter                USES _PORTAB 
 clearFilter               USES _PORTAB 
-max                       USES blueB redR greenG STRING.RED.12 put 
-                                STRING.GREEN.13 STRING.BLUE.14 
+max                       USES blueB greenG redR STRING.WHITE.12 put 
+                                STRING.RED.13 STRING.GREEN.14 STRING.BLUE.15 
 red_read                  USES redFilter redR pulse SNDelay 
 green_read                USES greenFilter greenG pulse SNDelay 
 blue_read                 USES blueFilter blueB pulse SNDelay 
@@ -2993,6 +3006,8 @@ DEPENDENCY TREE
  |  |     |    
  |  |     +- SNDelay              (see above)
  |  |        
+ |  +- upMotor             
+ |  |    
  |  +- put2lcd              (see above)
  |  |  
  |  +- SNDelay              (see above)
@@ -3040,6 +3055,8 @@ DEPENDENCY TREE
  |  |  +- put                  (see above)
  |  |     
  |  +- _ILSEXT             
+ |  |    
+ |  +- downMotor           
  |       
  +- _Startup            
     | 
@@ -3059,6 +3076,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 6
-Total size of all blocks to be downloaded: 1910
+Number of blocks to be downloaded: 7
+Total size of all blocks to be downloaded: 2114
 
