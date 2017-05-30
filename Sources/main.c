@@ -18,12 +18,13 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------Variables-----------------------------------------------------------------------*/
-char *r="R=";
-char *g="G=";
-char *b="B=";
+char *r="RED=";
+char *g="GREEN=";
+char *b="BLUE=";
 char *c="C=";
 char *space="  ";
 int color=0;
+int redCandy=0,greenCandy=0,blueCandy=0;
 unsigned long int pulse = 0;
 unsigned long int redR=0;     
 unsigned long int blueB=0;    
@@ -55,6 +56,7 @@ void put(char *ptr);
 void openLCD(void);
 void put2lcd(char c,int type);
 void numLCD(unsigned long int color);
+void startingSevenSegment(void);
 void SNDelay(unsigned int x);
 void ringBuzzer(unsigned int note);
 long map(long value, long fromLow, long fromHigh, long toLow, long toHigh);
@@ -71,15 +73,18 @@ void main(void)
   TIE=0x01;                  //timer interrupt
   TFLG2=0x80;             //timer overflow bit clear
  
+  upMotor(23); SNDelay(1);
   initialize();
-  scaling();
-  __asm CLI;
+  scaling();     
+  __asm CLI; 
+  
+  startingSevenSegment();   
   openLCD();      
   calibration();   
 
 
   while(1){ 
-    upMotor(23); SNDelay(1);SNDelay(1);
+    upMotor(23); SNDelay(1);
     put2lcd(0x01,0); //clear screen
     SNDelay(366);
     PORTB=0x00;  SNDelay(1);
@@ -88,69 +93,76 @@ void main(void)
     upMotor(17);SNDelay(2);         
     red_read();
     redR=constrain(redR,blackCalRed,whiteCalRed);    
-    redR = map(redR, blackCalRed, whiteCalRed,0,255);    
-	SNDelay(5);put(r);numLCD(redR);put(space);PORTB=0x03; 
+    redR = map(redR, blackCalRed, whiteCalRed,0,255);	SNDelay(5);
   
 	green_read();
 	greenG=constrain(greenG,blackCalGreen,whiteCalGreen);
-	greenG = map(greenG, blackCalGreen,whiteCalGreen, 0,255); 
-	SNDelay(5);put(g);numLCD(greenG);put2lcd(0xC0,0); PORTB=0x1F;   
+	greenG = map(greenG, blackCalGreen,whiteCalGreen, 0,255);SNDelay(5); 
   
 	blue_read();
 	blueB=constrain(blueB,blackCalBlue,whiteCalBlue);
-	blueB = map(blueB,blackCalBlue,whiteCalBlue, 0,255);   
-	SNDelay(5);put(b);numLCD(blueB);put(space); PORTB=0xFF;	 
+	blueB = map(blueB,blackCalBlue,whiteCalBlue, 0,255);	SNDelay(5);	 
 
     clear_read();
-	color=max();  numLCD(color);
+	color=max();
+		
 	
-	
-	if(color==1)//color is=red
+	if(color==1){
+	  //color is=red
 	  downMotor(9);
-	else if(color==2)//color is=green
+	  redCandy++;}	  
+	else if(color==2){
+	  //color is=green
 	  downMotor(13);
-	else if(color==3)//color is=blue
-	  downMotor(17);	
+	  greenCandy++;}	  
+	else if(color==3){
+	  //color is=blue
+	  downMotor(17);
+	  blueCandy++;}		
 	else; //color is=unknown
 
-	
-	SNDelay(1);upMotor(13); 
-    SNDelay(5);SNDelay(1);SNDelay(2);    
+    
+	SNDelay(1);upMotor(13);SNDelay(2);
+	put(r);numLCD(redCandy);put(space);PORTB=0x03; 
+    put(g);numLCD(greenCandy);put2lcd(0xC0,0); PORTB=0x1F; 
+    put(b);numLCD(blueCandy);put(space); PORTB=0xFF;
+    
+    DisableInterrupts;
+    ringBuzzer(DO);ringBuzzer(MI);ringBuzzer(RE);ringBuzzer(FA);  //call the buzzer function   one note ring 100ms
+    __asm CLI;
+    SNDelay(1);SNDelay(2);     
     }            
 }
 
-
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------BUZZER---------------------------------------------------------------------*/
+/*--------------------------------------------------------------BUZZER------------------------------------------------------------------------------------*/
 void ringBuzzer(unsigned int note) {
   unsigned int Tcount;
-  unsigned int timerOverFlow = 0; 
+  unsigned int tof = 0; 
 
-  DDRT=DDRT |0x20;
+  DDRT=DDRT | 0x20;
   TIOS=TIOS | 0x20;
-  TCTL1=0x04;
-  while( timerOverFlow <365/2){     
+  TCTL1=TCTL1 | 0x04;
+  while( tof <365/8){     
     Tcount = TCNT;
     Tcount = Tcount + note;
     TC5 = Tcount;
     TFLG2 = 0x80;
    
-
     while(!(TFLG1 & TFLG1_C5F_MASK)); 
     TFLG1 = TFLG1 | TFLG1_C5F_MASK;
       
-    if (TFLG2 & 0x80) 
-      timerOverFlow = timerOverFlow + 1;}
-     TCTL1=0x00;  
+    if(TFLG2 & 0x80) 
+      tof = tof + 1;}
+      TCTL1=TCTL1 & ~0x04; 
 }        
-
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------INTERRUPT-------------------------------------------------------------------------------*/ 
 interrupt ( ( (0x10000-Vtimch0) /2) -1)  void TC0_ISR(void) {
   pulse++; 
   TFLG1=TFLG1 | 0x01; }    
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/                                                   
-/*-------------------------------------------------------MAP-CONSTRAIN--------------------------------------------------------------------------------*/ 
+/*-----------------------------------------------------------MAP-CONSTRAIN----------------------------------------------------------------------------*/ 
 //references:https://www.arduino.cc/en/reference/map
 long map(long value, long fromLow, long fromHigh, long toLow, long toHigh){
   return ((value - fromLow) * (toHigh - toLow)) / ((fromHigh - fromLow) + toLow);}
@@ -181,7 +193,7 @@ void calibration(){
   green_read();whiteCalGreen=greenG; PORTB=0x1F;    SNDelay(4); 
   blue_read();  whiteCalBlue=blueB; PORTB=0xFF;           SNDelay(4);  }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------MOTORS--------------------------------------------------------------------*/
+/*----------------------------------------------------------------MOTORS---------------------------------------------------------------------------------*/
 //23=left---5=right
 void upMotor(int value){  
   PWMPRCLK = 0x03; // Set clock A prescaler to 8
@@ -251,13 +263,17 @@ void clearFilter(void){
 /*---------------------------------------------------------------COLORS----------------------------------------------------------------------------------*/   
 int max(void){
   if(blueB>95 && greenG>95 && redR>95){
-    put("WHITE"); return 0;}
+   // put("WHITE"); 
+    return 0;}
   else if(blueB<redR && greenG<redR){
-      put("RED"); return 1;    }
+   // put("RED"); 
+    return 1;    }
   else if(blueB<=greenG && redR<=greenG) {
-      put("GREEN");return 2;}      
+  //  put("GREEN");
+    return 2;}      
   else if(redR<blueB && greenG<blueB) {
-      put("BLUE");return 3; }
+  //  put("BLUE");
+    return 3; }
   }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------READ COLOR-----------------------------------------------------------------------------*/   
@@ -338,8 +354,17 @@ void put(char *ptr) {
     SNDelay(366);}}
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
 /*---------------------------------------------------------------WRITE NUMBER LCD -------------------------------------------------------------------*/ 
-/*3 digits numbers write the lcd screen*/          
+/*2 digits numbers write the lcd screen*/          
 void numLCD(unsigned long int color) {  
-    put2lcd(((color/100)%10)+'0',1);
     put2lcd(((color/10)%10)+'0',1);
     put2lcd((color%10)+'0',1); }
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
+/*--------------------------------------------------------------SEVEN SEGMENT DISPLAY -------------------------------------------------------------*/    
+void startingSevenSegment(void){ 
+  DDRP=0xFF;
+  PTP=0x0E;
+  PORTB=0b01001111;   SNDelay(1); //3
+  PORTB=0b01011011;   SNDelay(1); //2
+  PORTB=0b00000110;   SNDelay(1); //1
+  PTP=0x00;
+}    
