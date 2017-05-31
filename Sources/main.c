@@ -18,11 +18,11 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------Variables-----------------------------------------------------------------------*/
-char *r="RED=";
-char *g="GREEN=";
-char *b="BLUE=";
+char *r="KIRMIZI=";
+char *g="YESIL=";
+char *b="MAVI=";
 char *c="C=";
-char *space="  ";
+char *space=" ";
 int color=0;
 int redCandy=0,greenCandy=0,blueCandy=0;
 unsigned long int pulse = 0;
@@ -39,6 +39,7 @@ unsigned long int blackCalBlue=0;
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/ 
 /*--------------------------------------------------------------------------Functions----------------------------------------------------------------------*/
 int max(void);
+void startCondition(void);
 void upMotor(int x);
 void downMotor(int x);
 void scaling(void);
@@ -72,14 +73,16 @@ void main(void)
   TCTL4= 0x02;             //falling edge
   TIE=0x01;                  //timer interrupt
   TFLG2=0x80;             //timer overflow bit clear
- 
+
+  openLCD();
+  startCondition();
+  
   upMotor(23); SNDelay(1);
   initialize();
   scaling();     
   __asm CLI; 
-  
-  startingSevenSegment();   
-  openLCD();      
+
+  startingSevenSegment();        
   calibration();   
 
 
@@ -88,25 +91,24 @@ void main(void)
     put2lcd(0x01,0); //clear screen
     SNDelay(366);
     PORTB=0x00;  SNDelay(1);
-             
-             
+                       
     upMotor(17);SNDelay(2);         
     red_read();
     redR=constrain(redR,blackCalRed,whiteCalRed);    
     redR = map(redR, blackCalRed, whiteCalRed,0,255);	SNDelay(5);
-  
+
 	green_read();
 	greenG=constrain(greenG,blackCalGreen,whiteCalGreen);
-	greenG = map(greenG, blackCalGreen,whiteCalGreen, 0,255);SNDelay(5); 
-  
+	greenG = map(greenG, blackCalGreen,whiteCalGreen, 0,255);SNDelay(5);
+ 
 	blue_read();
 	blueB=constrain(blueB,blackCalBlue,whiteCalBlue);
-	blueB = map(blueB,blackCalBlue,whiteCalBlue, 0,255);	SNDelay(5);	 
+	blueB = map(blueB,blackCalBlue,whiteCalBlue, 0,255);	SNDelay(5);
 
     clear_read();
 	color=max();
 		
-	
+
 	if(color==1){
 	  //color is=red
 	  downMotor(9);
@@ -121,19 +123,24 @@ void main(void)
 	  blueCandy++;}		
 	else; //color is=unknown
 
-    
-	SNDelay(1);upMotor(13);SNDelay(2);
-	put(r);numLCD(redCandy);put(space);PORTB=0x03; 
-    put(g);numLCD(greenCandy);put2lcd(0xC0,0); PORTB=0x1F; 
-    put(b);numLCD(blueCandy);put(space); PORTB=0xFF;
+
+    SNDelay(1);upMotor(13);SNDelay(2);
+	put(r);numLCD(redCandy);put2lcd(0xC0,0);PORTB=0x03; 
+    put(g);numLCD(greenCandy);put(space);PORTB=0x1F; 
+    put(b);numLCD(blueCandy);PORTB=0xFF;   
+       
     
     DisableInterrupts;
     ringBuzzer(DO);ringBuzzer(MI);ringBuzzer(RE);ringBuzzer(FA);  //call the buzzer function   one note ring 100ms
     __asm CLI;
-    SNDelay(1);SNDelay(2);     
-    }            
+    SNDelay(1);SNDelay(2);}            
 }
 
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------STARTING CONDITION------------------------------------------------------------------------*/
+void startCondition(void){
+  while(PTH==0){put("BEKLEMEDE...");SNDelay(2);put2lcd(0x01,0);}//waiting PORTH switch rising edge
+  put2lcd(0x01,0);put("BASLIYOR...");SNDelay(2);put2lcd(0x01,0);}
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------BUZZER------------------------------------------------------------------------------------*/
 void ringBuzzer(unsigned int note) {
@@ -154,8 +161,7 @@ void ringBuzzer(unsigned int note) {
       
     if(TFLG2 & 0x80) 
       tof = tof + 1;}
-      TCTL1=TCTL1 & ~0x04; 
-}        
+      TCTL1=TCTL1 & ~0x04; }        
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------INTERRUPT-------------------------------------------------------------------------------*/ 
 interrupt ( ( (0x10000-Vtimch0) /2) -1)  void TC0_ISR(void) {
@@ -176,7 +182,7 @@ unsigned long int constrain(unsigned long int value,unsigned long int a, unsigne
 /*--------------------------------------------------------------CALIBRATION-----------------------------------------------------------------------------*/ 
 void calibration(){ 
   put("Siyah ve Beyaz "); put2lcd(0xC0,0); put("kagitlari okutun"); 
-  SNDelay(1);SNDelay(1); SNDelay(1); 
+  SNDelay(1);SNDelay(1);SNDelay(1); 
   put2lcd(0x01,0);
 
   put("siyah");put2lcd(0xC0,0);put("kalibrasyonu:");      SNDelay(2);
@@ -185,8 +191,7 @@ void calibration(){
   green_read();blackCalGreen=greenG; PORTB=0x1F;    SNDelay(4);
   blue_read();  blackCalBlue=blueB; PORTB=0xFF;          SNDelay(4);
   put2lcd(0x01,0);PORTB=0x00;
-  
-  
+
   put("beyaz");put2lcd(0xC0,0);put("kalibrasyonu:");      SNDelay(2); 
   SNDelay(1);SNDelay(1);SNDelay(1);    
   red_read();    whiteCalRed=redR; PORTB=0x03;            SNDelay(4); 
@@ -262,18 +267,14 @@ void clearFilter(void){
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/  
 /*---------------------------------------------------------------COLORS----------------------------------------------------------------------------------*/   
 int max(void){
-  if(blueB>95 && greenG>95 && redR>95){
-   // put("WHITE"); 
-    return 0;}
-  else if(blueB<redR && greenG<redR){
-   // put("RED"); 
-    return 1;    }
-  else if(blueB<=greenG && redR<=greenG) {
-  //  put("GREEN");
-    return 2;}      
-  else if(redR<blueB && greenG<blueB) {
-  //  put("BLUE");
-    return 3; }
+  if(blueB>115 && greenG>115 && redR>115)
+    return 0;
+  else if(blueB<redR && greenG<redR)
+    return 1;    
+  else if(blueB<=greenG && redR<=greenG) 
+    return 2;      
+  else if(redR<blueB && greenG<blueB) 
+    return 3; 
   }
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------READ COLOR-----------------------------------------------------------------------------*/   
@@ -355,9 +356,9 @@ void put(char *ptr) {
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
 /*---------------------------------------------------------------WRITE NUMBER LCD -------------------------------------------------------------------*/ 
 /*2 digits numbers write the lcd screen*/          
-void numLCD(unsigned long int color) {  
+void numLCD(unsigned long int color) {
     put2lcd(((color/10)%10)+'0',1);
-    put2lcd((color%10)+'0',1); }
+    put2lcd((color%10)+'0',1); }   
 /*------------------------------------------------------------------------------------------------------------------------------------------------------------*/    
 /*--------------------------------------------------------------SEVEN SEGMENT DISPLAY -------------------------------------------------------------*/    
 void startingSevenSegment(void){ 
