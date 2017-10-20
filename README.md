@@ -9,3 +9,5 @@ tek bırakılır.Projede 2 adet servo motor kullanılmıştır.Üst kısımda bu
 
 https://www.youtube.com/watch?v=015AatLuTIY
 
+http://www.gtu.edu.tr/icerik/8/5772/display.aspx?languageId=1
+
